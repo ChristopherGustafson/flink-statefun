@@ -59,12 +59,25 @@ public final class MultiLangSmokeHarnessTest {
 
   private static final Logger LOG = LoggerFactory.getLogger(MultiLangSmokeHarnessTest.class);
 
-  @Ignore
-  @Test(timeout = 1_000 * 60 * 2)
+  //@Ignore
+  @Test/*(timeout = 1_000 * 60 * 2)*/
   public void miniClusterTest() throws Exception {
     Harness harness = new Harness();
 
     // set Flink related configuration.
+//    harness.withConfiguration("state.backend", "rocksdb");
+//    harness.withConfiguration("state.backend.rocksdb.timer-service.factory", "ROCKSDB");
+//    harness.withConfiguration("state.backend.incremental", "true");
+
+    harness.withConfiguration("state.backend", "ndb");
+    harness.withConfiguration("state.backend.ndb.connectionstring", "localhost:1186");
+    harness.withConfiguration("state.backend.ndb.dbname", "flinkndb");
+    harness.withConfiguration("state.backend.ndb.truncatetableonstart", "false");
+
+    harness.withConfiguration("state.checkpoints.dir", "file:///tmp/checkpoints");
+    harness.withConfiguration("state.savepoints.dir", "file:///tmp/savepoints");
+
+
     harness.withConfiguration(
         "classloader.parent-first-patterns.additional",
         "org.apache.flink.statefun;org.apache.kafka;com.google.protobuf");
@@ -75,15 +88,14 @@ public final class MultiLangSmokeHarnessTest {
     harness.withConfiguration("execution.checkpointing.mode", "EXACTLY_ONCE");
     harness.withConfiguration("execution.checkpointing.max-concurrent-checkpoints", "3");
     harness.withConfiguration("parallelism.default", "2");
-    harness.withConfiguration("state.checkpoints.dir", "file:///tmp/checkpoints");
-
+//
     // start the verification server
     SimpleVerificationServer.StartedServer started = new SimpleVerificationServer().start();
 
     // configure test parameters.
     SmokeRunnerParameters parameters = new SmokeRunnerParameters();
     parameters.setMaxFailures(1);
-    parameters.setMessageCount(100_000);
+    parameters.setMessageCount(100);
     parameters.setNumberOfFunctionInstances(128);
     parameters.setVerificationServerHost("localhost");
     parameters.setVerificationServerPort(started.port());

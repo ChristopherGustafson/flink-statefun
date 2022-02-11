@@ -22,6 +22,9 @@ import java.util.Map;
 import java.util.Objects;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.CoreOptions;
+import org.apache.flink.configuration.StateBackendOptions;
+import org.apache.flink.contrib.streaming.state.EmbeddedRocksDBStateBackend;
+import org.apache.flink.contrib.streaming.state.NDBStateBackend;
 import org.apache.flink.runtime.jobgraph.SavepointConfigOptions;
 import org.apache.flink.statefun.flink.core.StatefulFunctionsConfig;
 import org.apache.flink.statefun.flink.core.StatefulFunctionsConfigValidator;
@@ -128,8 +131,17 @@ public class Harness {
   public void start() throws Exception {
     configureStrictlyRequiredFlinkConfigs(flinkConfig);
     final int parallelism = getParallelism(flinkConfig);
+
     StreamExecutionEnvironment env =
         StreamExecutionEnvironment.createLocalEnvironment(parallelism, flinkConfig);
+
+    // RocksDB need to be configured like this, cannot be configured in flinkConfig
+    // see https://github.com/apache/flink/blob/master/flink-state-backends/flink-statebackend-rocksdb/src/main/java/org/apache/flink/contrib/streaming/state/RocksDBStateBackend.java#L59
+    if(flinkConfig.getString(StateBackendOptions.STATE_BACKEND).equals("rocksdb")) {
+      env.setStateBackend(new EmbeddedRocksDBStateBackend());
+      env.getCheckpointConfig().setCheckpointStorage("file:///tmp/checkpoints");
+    }
+
     // Configure will change the value of a setting only if a corresponding option was set in the
     // underlying configuration. If a key is not present, the current value of a field will remain
     // untouched.
