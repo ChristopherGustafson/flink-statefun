@@ -82,6 +82,12 @@ under the License.
             <version>${flink.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-statebackend-ndb_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
         <!-- flink runtime is always provided -->
         <dependency>
             <groupId>org.apache.flink</groupId>

@@ -74,6 +74,11 @@ public final class SmokeRunner {
       Supplier<VerificationResult> results, final int numberOfFunctionInstances) {
     Set<Integer> successfullyVerified = new HashSet<>();
     while (successfullyVerified.size() != numberOfFunctionInstances) {
+      System.out.println(
+          "Trying to verify results, currently at "
+              + successfullyVerified.size()
+              + "/"
+              + numberOfFunctionInstances);
       VerificationResult result = results.get();
       if (result.getActual() == result.getExpected()) {
         successfullyVerified.add(result.getId());

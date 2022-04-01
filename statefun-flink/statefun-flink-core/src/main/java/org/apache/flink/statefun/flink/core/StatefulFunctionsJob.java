@@ -81,6 +81,7 @@ public class StatefulFunctionsJob {
         new FlinkUniverse(feedbackKey, stateFunConfig, statefulFunctionsUniverse);
     flinkUniverse.configure(env);
 
+    System.out.println(env.getExecutionPlan());
     env.execute(stateFunConfig.getFlinkJobName());
   }
 

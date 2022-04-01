@@ -28,22 +28,35 @@ classloader.parent-first-patterns.additional: org.apache.flink.statefun;org.apac
 #==============================================================================
 
 # Uncomment the below to enable checkpointing for your application
-#execution.checkpointing.mode: EXACTLY_ONCE
-#execution.checkpointing.interval: 5sec
+execution.checkpointing.mode: EXACTLY_ONCE
+execution.checkpointing.interval: 70sec
 
 restart-strategy: fixed-delay
 restart-strategy.fixed-delay.attempts: 2147483647
 restart-strategy.fixed-delay.delay: 1sec
 
-state.backend.local-recovery: true
-state.backend: rocksdb
-state.backend.rocksdb.timer-service.factory: ROCKSDB
-state.backend.rocksdb.localdir: /local/state/rocksdb
-state.backend.rocksdb.memory.partitioned-index-filters: true
-state.backend.rocksdb.checkpoint.transfer.thread.num: 8
-state.backend.rocksdb.thread.num: 4
-state.checkpoints.dir: file:///checkpoint-dir
-state.backend.incremental: true
+#==============================================================================
+# RocksDB state backend configs
+#==============================================================================
+#state.backend.local-recovery: true
+#state.backend: rocksdb
+#state.backend.rocksdb.timer-service.factory: ROCKSDB
+#state.backend.rocksdb.localdir: /local/state/rocksdb
+#state.backend.rocksdb.memory.partitioned-index-filters: true
+#state.backend.rocksdb.checkpoint.transfer.thread.num: 8
+#state.backend.rocksdb.thread.num: 4
+#state.backend.incremental: true
+
+#==============================================================================
+# NDB state backend configs
+#==============================================================================
+state.backend: ndb
+state.backend.ndb.connectionstring: localhost:1186
+state.backend.ndb.dbname: flinkndb
+state.backend.ndb.truncatetableonstart: false
+state.savepoints.dir: file:///tmp/flinksavepoints
+state.checkpoints.dir: file:///tmp/flinkcheckpoints
+
 
 taskmanager.state.local.root-dirs: file:///local/state/recovery
 
@@ -60,3 +73,6 @@ taskmanager.memory.process.size: 4g
 
 pipeline.auto-generate-uids: false
 execution.savepoint.ignore-unclaimed-state: true
+
+
+rest.bind-port: 18080-18090

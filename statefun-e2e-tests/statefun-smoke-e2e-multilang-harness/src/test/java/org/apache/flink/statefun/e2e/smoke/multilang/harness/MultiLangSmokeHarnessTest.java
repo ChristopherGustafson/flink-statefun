@@ -25,7 +25,6 @@ import org.apache.flink.statefun.e2e.smoke.SmokeRunnerParameters;
 import org.apache.flink.statefun.e2e.smoke.driver.DriverModule;
 import org.apache.flink.statefun.flink.harness.Harness;
 import org.apache.flink.statefun.sdk.spi.StatefulFunctionModule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,24 +58,25 @@ public final class MultiLangSmokeHarnessTest {
 
   private static final Logger LOG = LoggerFactory.getLogger(MultiLangSmokeHarnessTest.class);
 
-  //@Ignore
-  @Test/*(timeout = 1_000 * 60 * 2)*/
+  // @Ignore
+  @Test /*(timeout = 1_000 * 60 * 2)*/
   public void miniClusterTest() throws Exception {
     Harness harness = new Harness();
 
     // set Flink related configuration.
-//    harness.withConfiguration("state.backend", "rocksdb");
-//    harness.withConfiguration("state.backend.rocksdb.timer-service.factory", "ROCKSDB");
-//    harness.withConfiguration("state.backend.incremental", "true");
+    //        harness.withConfiguration("state.backend", "rocksdb");
+    //        harness.withConfiguration("state.backend.rocksdb.timer-service.factory",
+    // "ROCKSDB");
+    //        harness.withConfiguration("state.backend.incremental", "true");
 
     harness.withConfiguration("state.backend", "ndb");
-    harness.withConfiguration("state.backend.ndb.connectionstring", "localhost:1186");
+    harness.withConfiguration("state.backend.ndb.connectionstring", "127.0.0.1");
     harness.withConfiguration("state.backend.ndb.dbname", "flinkndb");
     harness.withConfiguration("state.backend.ndb.truncatetableonstart", "false");
+    harness.withConfiguration("state.backend.local-recovery", "false");
 
     harness.withConfiguration("state.checkpoints.dir", "file:///tmp/checkpoints");
     harness.withConfiguration("state.savepoints.dir", "file:///tmp/savepoints");
-
 
     harness.withConfiguration(
         "classloader.parent-first-patterns.additional",
@@ -84,11 +84,11 @@ public final class MultiLangSmokeHarnessTest {
     harness.withConfiguration("restart-strategy", "fixed-delay");
     harness.withConfiguration("restart-strategy.fixed-delay.attempts", "2147483647");
     harness.withConfiguration("restart-strategy.fixed-delay.delay", "1sec");
-    harness.withConfiguration("execution.checkpointing.interval", "2sec");
+    harness.withConfiguration("execution.checkpointing.interval", "1sec");
     harness.withConfiguration("execution.checkpointing.mode", "EXACTLY_ONCE");
     harness.withConfiguration("execution.checkpointing.max-concurrent-checkpoints", "3");
     harness.withConfiguration("parallelism.default", "2");
-//
+    //
     // start the verification server
     SimpleVerificationServer.StartedServer started = new SimpleVerificationServer().start();
 

@@ -29,6 +29,8 @@ FLINK_HOME=${FLINK_HOME:-"/opt/flink/bin"}
 ROLE=${ROLE:-"worker"}
 MASTER_HOST=${MASTER_HOST:-"localhost"}
 
+echo MASTER HOST IS CURRENTLY SET AS ${MASTER_HOST}
+
 #
 # Start a service depending on the role.
 #

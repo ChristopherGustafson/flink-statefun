@@ -16,5 +16,5 @@
 kind: io.statefun.endpoints.v2/http
 spec:
   functions: statefun.smoke.e2e/command-interpreter-fn
-  urlPathTemplate: http://localhost:8001
+  urlPathTemplate: http://localhost:8002
   maxNumBatchRequests: 10000

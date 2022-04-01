@@ -27,20 +27,21 @@ under the License.
         <relativePath>..</relativePath>
     </parent>
 
-    <artifactId>statefun-flink-core</artifactId>
-
     <properties>
-        <okhttp.version>3.14.6</okhttp.version>
         <additional-sources.dir>target/additional-sources</additional-sources.dir>
-        <flink-shaded-netty.version>4.1.65.Final-14.0</flink-shaded-netty.version>
     </properties>
 
-    <dependencies>
+    <artifactId>statefun-flink-io</artifactId>
 
-        <!-- sdk -->
+    <dependencies>
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>statefun-sdk-embedded</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>statefun-flink-extensions</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -50,106 +51,12 @@ under the License.
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>statefun-flink-io</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>statefun-flink-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>statefun-flink-extensions</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- flink runtime -->
-        <dependency>
-            <groupId>org.apache.flink</groupId>
             <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-metrics-dropwizard</artifactId>
             <version>${flink.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-statebackend-ndb_${scala.binary.version}</artifactId>
-            <version>${flink.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <!-- 3rd party -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.kohlschutter.junixsocket</groupId>
-            <artifactId>junixsocket-core</artifactId>
-            <version>${unixsocket.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-shaded-netty</artifactId>
-            <version>${flink-shaded-netty.version}</version>
-        </dependency>
-
-        <!-- tests -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-core</artifactId>
-            <version>${flink.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-test-utils-junit</artifactId>
-            <version>${flink.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>mockwebserver</artifactId>
-            <version>${okhttp.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- benchmarks -->
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-generator-annprocess</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.jimfs</groupId>
-            <artifactId>jimfs</artifactId>
-            <version>1.1</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -178,7 +85,7 @@ under the License.
                                     <version>${project.version}</version>
                                     <type>jar</type>
                                     <outputDirectory>${additional-sources.dir}</outputDirectory>
-                                    <includes>sdk/*.proto</includes>
+                                    <includes>io/*.proto</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -215,5 +122,6 @@ under the License.
             </plugin>
         </plugins>
     </build>
+
 
 </project>

@@ -140,6 +140,9 @@ public final class RequestReplyFunction implements StatefulFunction {
     // so we add that request to the batch.
     batch.append(invocationBuilder.build());
     inflightOrBatched++;
+    LOG.info(
+        "There is at least one request in flight, waiting, current inflightOrBatched: "
+            + inflightOrBatched);
     requestState.set(inflightOrBatched);
     context.functionTypeMetrics().appendBacklogMessages(1);
     if (isMaxNumBatchRequestsExceeded(inflightOrBatched)) {
@@ -211,7 +214,7 @@ public final class RequestReplyFunction implements StatefulFunction {
     if (numBatched < 0) {
       throw new IllegalStateException("Got an unexpected async result");
     } else if (numBatched == 0) {
-      requestState.clear();
+      requestState.set(-1);
     } else {
       final InvocationBatchRequest.Builder nextBatch = getNextBatch();
       // an async request was just completed, but while it was in flight we have
@@ -348,9 +351,11 @@ public final class RequestReplyFunction implements StatefulFunction {
           "Bootstrapping function {}. Blocking processing until first request is completed. Successive requests will be performed asynchronously.",
           functionType);
 
-      // it is important to toggle the flag *before* handling the response. As a result of handling
+      // it is important to toggle the flag *before* handling the response. As a result of
+      // handling
       // the first response, we may send retry requests in the case of an
-      // IncompleteInvocationContext response. For those requests, we already want to handle them as
+      // IncompleteInvocationContext response. For those requests, we already want to handle
+      // them as
       // usual async operations.
       isFirstRequestSent = true;
       onAsyncResult(context, joinResponse(responseFuture, toFunction));
